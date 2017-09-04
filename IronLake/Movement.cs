@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace IronLake
 {
@@ -14,6 +17,14 @@ namespace IronLake
                 {Direction.Down, (Direction.Up, false)},
                 {Direction.Left, (Direction.Right, true)}
             };
+
+        public static readonly Dictionary<Direction, Enum[]> InputMap = new Dictionary<Direction, Enum[]>
+        {
+            {Direction.Up, new Enum[] {Buttons.DPadUp, Keys.W, Keys.Up}},
+            {Direction.Right, new Enum[] {Buttons.DPadRight, Keys.D, Keys.Right}},
+            {Direction.Down, new Enum[] {Buttons.DPadDown, Keys.S, Keys.Down}},
+            {Direction.Left, new Enum[] {Buttons.DPadLeft, Keys.A, Keys.Left}}
+        };
 
         [Flags]
         public enum Direction
@@ -41,6 +52,30 @@ namespace IronLake
         public static bool IsTouchingOfBounds(float position, int offset, int maxLimit)
         {
             return position < 0 || position + offset > maxLimit;
+        }
+
+        public static Direction GetInputDirections()
+        {
+            return EnumExtensions.GetValues<Direction>()
+                .Where(d => d > Direction.None)
+                .Where(direction => GetInput(InputMap[direction]))
+                .Aggregate(Direction.None, (current, direction) => current | direction);
+        }
+
+        public static bool GetInput(IEnumerable<Enum> inputs)
+        {
+            return inputs.Any(i =>
+            {
+                switch (i)
+                {
+                    case Buttons b:
+                        return GamePad.GetState(PlayerIndex.One).IsButtonDown(b);
+                    case Keys k:
+                        return Keyboard.GetState().IsKeyDown(k);
+                    default:
+                        return false;
+                }
+            });
         }
     }
 }
