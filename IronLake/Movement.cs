@@ -49,7 +49,7 @@ namespace IronLake
             return position < 0 || position > maxLimit;
         }
 
-        public static bool IsTouchingOfBounds(float position, int offset, int maxLimit)
+        public static bool IsTouchingBounds(float position, int offset, int maxLimit)
         {
             return position < 0 || position + offset > maxLimit;
         }
