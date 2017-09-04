@@ -29,11 +29,11 @@ namespace IronLake
         [Flags]
         public enum Direction
         {
-            None = 1,
-            Up = 2,
-            Right = 4,
-            Down = 8,
-            Left = 16
+            None = 0,
+            Up = 1,
+            Right = 2,
+            Down = 4,
+            Left = 8
         }
 
         public static float LambdaMove(float amount, Direction direction, double elapsedSeconds)
