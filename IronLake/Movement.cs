@@ -8,10 +8,20 @@ namespace IronLake
 {
     public static class Movement
     {
+        [Flags]
+        public enum Direction
+        {
+            None = 0,
+            Up = 1,
+            Right = 2,
+            Down = 4,
+            Left = 8
+        }
+
         public static readonly Dictionary<Direction, (Direction Opposite, bool IsNegative)> Directions =
             new Dictionary<Direction, (Direction Opposite, bool IsNegative)>
             {
-                {Direction.None, (Direction.None, false) },
+                {Direction.None, (Direction.None, false)},
                 {Direction.Up, (Direction.Down, true)},
                 {Direction.Right, (Direction.Left, false)},
                 {Direction.Down, (Direction.Up, false)},
@@ -25,16 +35,6 @@ namespace IronLake
             {Direction.Down, new Enum[] {Buttons.DPadDown, Keys.S, Keys.Down}},
             {Direction.Left, new Enum[] {Buttons.DPadLeft, Keys.A, Keys.Left}}
         };
-
-        [Flags]
-        public enum Direction
-        {
-            None = 0,
-            Up = 1,
-            Right = 2,
-            Down = 4,
-            Left = 8
-        }
 
         public static float LambdaMove(float amount, Direction direction, double elapsedSeconds)
         {

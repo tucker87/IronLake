@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace IronLake
 {
     public class GameObject
     {
-        public List<Component> Components { get; set; }
-        
-        public Transform Transform => GetComponent<Transform>();
+        private bool _isActive;
 
-        private bool isActive;
-
-        public GameObject() : this(Enumerable.Empty<Component>()) { }
+        public GameObject() : this(Enumerable.Empty<Component>())
+        {
+        }
 
         public GameObject(IEnumerable<Component> components)
         {
@@ -22,6 +18,10 @@ namespace IronLake
             if (!Components.OfType<Transform>().Any())
                 Components.Add(new Transform());
         }
+
+        public List<Component> Components { get; set; }
+
+        public Transform Transform => GetComponent<Transform>();
 
         public GameObject SetPosition(Vector2 position)
         {
@@ -31,7 +31,7 @@ namespace IronLake
 
         public void Activate()
         {
-            isActive = true;
+            _isActive = true;
             Components.ForEach(c => c.Activate());
             OnActivate();
         }
@@ -41,7 +41,7 @@ namespace IronLake
             Components.Add(component);
             component.GameObject = this;
 
-            if (isActive)
+            if (_isActive)
                 component.Activate();
 
             return this;
@@ -49,63 +49,15 @@ namespace IronLake
 
         public T GetComponent<T>() where T : Component
         {
-            return (T)Components.First(c => c is T);
+            return (T) Components.First(c => c is T);
         }
 
-        public virtual void Update(double elapsedSeconds, (int Width, int Height) viewport) { }
-        public virtual void OnActivate() { }
-    }
-
-    public abstract class Component
-    {
-        public GameObject GameObject { get; set; }
-
-        public Transform Transform => GameObject.Transform;
-
-        public virtual void Activate() { }
-    }
-
-    public class Transform : Component
-    {
-        public Vector2 Position { get; set; }
-    }
-
-    public class SpriteRenderer : Component
-    {
-        public Texture2D Texture2D { get; set; }
-
-        public SpriteRenderer(Texture2D texture2D)
-        {
-            Texture2D = texture2D;
-        }
-    }
-
-    public class Collider : Component
-    {
-        public Action<BoxCollider> OnCollision { get; set; } = collider => { };
-
-        public virtual void BeforePhysics()
+        public virtual void Update(double elapsedSeconds, (int Width, int Height) viewport)
         {
         }
-    }
 
-    public class BoxCollider : Collider
-    {
-        public Rectangle BoundingBox { get; set; }
-
-        public BoxCollider(int width, int height)
+        public virtual void OnActivate()
         {
-            BoundingBox = new Rectangle(0, 0, width, height);
-        }
-
-        public override void BeforePhysics()
-        {
-            var boundingBox = BoundingBox;
-            boundingBox.X = (int) Transform.Position.X;
-            boundingBox.Y = (int) Transform.Position.Y;
-            BoundingBox = boundingBox;
-
-            base.BeforePhysics();
         }
     }
 }
