@@ -4,21 +4,22 @@ namespace IronLake
 {
     public class BoxCollider : Collider
     {
+        private Rectangle _boundingBox;
+
         public BoxCollider(int width, int height)
         {
-            BoundingBox = new Rectangle(0, 0, width, height);
+            _boundingBox = new Rectangle(0, 0, width, height);
         }
 
-        public Rectangle BoundingBox { get; set; }
-
-        public override void BeforePhysics()
+        public Rectangle BoundingBox
         {
-            var boundingBox = BoundingBox;
-            boundingBox.X = (int) Transform.Position.X;
-            boundingBox.Y = (int) Transform.Position.Y;
-            BoundingBox = boundingBox;
+            get
+            {
+                _boundingBox.X = (int) GameObject.Transform.Position.X;
+                _boundingBox.Y = (int)GameObject.Transform.Position.Y;
 
-            base.BeforePhysics();
+                return _boundingBox;
+            }
         }
     }
 }

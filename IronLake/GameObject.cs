@@ -23,15 +23,18 @@ namespace IronLake
 
         public Transform Transform => GetComponent<Transform>();
 
+        public GameScene Scene { get; set; }
+
         public GameObject SetPosition(Vector2 position)
         {
             Transform.Position = position;
             return this;
         }
 
-        public void Activate()
+        public void Activate(GameScene scene)
         {
             _isActive = true;
+            Scene = scene;
             Components.ForEach(c => c.Activate());
             OnActivate();
         }
@@ -49,7 +52,7 @@ namespace IronLake
 
         public T GetComponent<T>() where T : Component
         {
-            return (T) Components.First(c => c is T);
+            return (T) Components.FirstOrDefault(c => c is T);
         }
 
         public virtual void Update(double elapsedSeconds, (int Width, int Height) viewport)
