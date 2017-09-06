@@ -2,7 +2,7 @@
 {
     public abstract class Component
     {
-        public GameObject GameObject { get; set; }
+        public Element GameObject { get; set; }
 
         public Transform Transform => GameObject.Transform;
 

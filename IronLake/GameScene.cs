@@ -8,6 +8,7 @@ namespace IronLake
     {
         public Game Game { get; set; }
         public List<GameObject> GameObjects { get; set; } = new List<GameObject>();
+        public List<UiElement> UiElements { get; set; } = new List<UiElement>();
 
         public GameScene(Game game)
         {
@@ -20,7 +21,7 @@ namespace IronLake
                 .Where(go =>
                 {
                     var targetCollider = go.GetComponent<BoxCollider>();
-                    return targetCollider != null 
+                    return targetCollider != null
                         && targetCollider.BoundingBox.Intersects(sourceBoundingBox);
                 });
         }
